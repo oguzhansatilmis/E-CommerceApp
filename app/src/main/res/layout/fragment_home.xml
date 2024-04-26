@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:background="@color/white"
+    android:layout_height="match_parent"
+    tools:context=".ui.home.HomeFragment">
+
+
+
+
+    <ImageView
+        android:id="@+id/electronics_image"
+        android:layout_width="150dp"
+        android:layout_height="200dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="50dp"
+        android:scaleType="fitXY"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"></ImageView>
+
+
+    <TextView
+        android:id="@+id/electronics_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        app:layout_constraintEnd_toEndOf="@id/electronics_image"
+        app:layout_constraintStart_toStartOf="@id/electronics_image"
+        app:layout_constraintTop_toBottomOf="@id/electronics_image">
+
+    </TextView>
+
+
+    <ImageView
+        android:id="@+id/menClothing_image"
+        android:layout_width="150dp"
+        android:layout_height="200dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="20dp"
+        android:scaleType="fitXY"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/electronics_text"></ImageView>
+
+
+    <TextView
+        android:id="@+id/menClothing_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:scaleType="centerCrop"
+        app:layout_constraintEnd_toEndOf="@id/menClothing_image"
+        app:layout_constraintStart_toStartOf="@id/menClothing_image"
+        app:layout_constraintTop_toBottomOf="@id/menClothing_image">
+
+    </TextView>
+
+
+    <ImageView
+        android:id="@+id/jewelery_image"
+        android:layout_width="150dp"
+        android:layout_height="200dp"
+        android:layout_marginEnd="20dp"
+        android:scaleType="fitXY"
+        android:layout_marginTop="50dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"></ImageView>
+
+
+    <TextView
+        android:id="@+id/jewelery_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:scaleType="centerCrop"
+        app:layout_constraintEnd_toEndOf="@id/jewelery_image"
+        app:layout_constraintStart_toStartOf="@id/jewelery_image"
+        app:layout_constraintTop_toBottomOf="@id/jewelery_image">
+
+    </TextView>
+
+    <ImageView
+        android:id="@+id/womenClothing_image"
+        android:layout_width="150dp"
+        android:layout_height="200dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="20dp"
+        android:scaleType="fitXY"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/jewelery_text"></ImageView>
+
+
+    <TextView
+        android:id="@+id/womenClothing_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:scaleType="centerCrop"
+        app:layout_constraintEnd_toEndOf="@id/womenClothing_image"
+        app:layout_constraintStart_toStartOf="@id/womenClothing_image"
+        app:layout_constraintTop_toBottomOf="@id/womenClothing_image">
+
+    </TextView>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
