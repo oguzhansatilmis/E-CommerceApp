@@ -1,5 +1,6 @@
 package com.android.ecommerceapp.ui.explore
 
+import android.view.View
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.GridLayoutManager
 import com.android.ecommerceapp.MainActivity
@@ -8,7 +9,6 @@ import com.android.ecommerceapp.databinding.FragmentExploreBinding
 import com.android.ecommerceapp.model.Product
 import com.android.ecommerceapp.model.Result
 import dagger.hilt.android.AndroidEntryPoint
-
 
 @AndroidEntryPoint
 class ExploreFragment :
@@ -20,7 +20,9 @@ class ExploreFragment :
     }
 
     override fun initializeListeners() {
-
+        binding.basketView.setOnClickDecrease {}
+        binding.basketView.setOnClickIncrease {}
+        binding.basketView.setOnClickTrash {}
     }
 
     override fun observeEvents() {

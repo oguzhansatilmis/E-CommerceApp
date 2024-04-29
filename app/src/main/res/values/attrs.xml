@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="BasketLayoutView">
+        <attr name="buttonContainerSize" format="dimension" />
+        <attr name="textContainerHeight" format="dimension" />
+        <attr name="textContainerWidth" format="dimension" />
+        <attr name="textSize" format="dimension" />
+        <attr name="orientation" format="enum">
+            <enum name="horizontal" value="0" />
+            <enum name="vertical" value="1" />
+        </attr>
+    </declare-styleable>
+</resources>
