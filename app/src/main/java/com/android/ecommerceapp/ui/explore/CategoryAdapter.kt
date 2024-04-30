@@ -14,6 +14,9 @@ class CategoryAdapter(private val categoryList: List<Product>) :RecyclerView.Ada
 
     inner class ViewHolder(val binding: CategoryItemBinding):RecyclerView.ViewHolder(binding.root)
 
+
+    var listener: ((Double) -> Unit)? = null
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val binding = CategoryItemBinding.inflate(LayoutInflater.from(parent.context),parent,false)
         return ViewHolder(binding)
@@ -32,12 +35,29 @@ class CategoryAdapter(private val categoryList: List<Product>) :RecyclerView.Ada
             holder.binding.cardview.isSelected = !isSelected
 
             val bundle = Bundle()
+
+            println("id $categoryItem")
             bundle.apply {
                 putString("itemId",categoryItem.id.toString())
             }
 //            Navigation.findNavController(it).navigate(R.id.action_exploreFragment_to_detailFragment,bundle)
         }
+
+
+        holder.binding.basketView.setOnClickIncrease {
+
+           println(it)
+
+        }
+        holder.binding.basketView.setOnClickDecrease {
+            println(it)
+        }
+        holder.binding.basketView.setOnClickTrash {
+            println(it)
+        }
+
     }
+
 
     override fun getItemCount(): Int {
        return categoryList.size

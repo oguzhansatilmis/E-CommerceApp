@@ -1,9 +1,11 @@
 package com.android.ecommerceapp.customview
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.util.AttributeSet
 import android.util.TypedValue
 import android.view.LayoutInflater
+import android.view.MotionEvent
 import android.view.View
 import android.widget.ImageButton
 import android.widget.LinearLayout
@@ -12,12 +14,13 @@ import androidx.cardview.widget.CardView
 import com.android.ecommerceapp.R
 import com.android.ecommerceapp.util.customSetVisibility
 
-class BasketLayoutView @JvmOverloads constructor(
+class VerticalBasketLayout @JvmOverloads constructor(
 
     context: Context,
     attrs: AttributeSet? = null,
     defStyle: Int = 0
 ) : CardView(context, attrs, defStyle) {
+
 
     private val minusBtn: ImageButton
     private val deleteBtn: ImageButton
@@ -26,33 +29,33 @@ class BasketLayoutView @JvmOverloads constructor(
     private val linearLayout: LinearLayout
 
     private var buttonContainerSize: Int =
-        context.resources.getDimensionPixelSize(R.dimen.action_button_size)
+        context.resources.getDimensionPixelSize(R.dimen.vertical_basket_size)
     private var textContainerHeight: Int =
-        context.resources.getDimensionPixelSize(R.dimen.action_text_height_detail)
+        context.resources.getDimensionPixelSize(R.dimen.vertical_basket_size)
     private var textContainerWidth: Int =
-        context.resources.getDimensionPixelSize(R.dimen.action_text_width_detail)
+        context.resources.getDimensionPixelSize(R.dimen.vertical_basket_size)
     private var countTextSize = context.resources.getDimension(R.dimen.action_text_size_detail)
 
 
-    private var orientation = 0
+    private var orientation = 1
 
-    private var count = 1
-
+    private var count = 0
 
     init {
+
         isInEditMode
         loadAttributes(attrs)
-        LayoutInflater.from(context).inflate(R.layout.custombasketview, this, true)
+        LayoutInflater.from(context).inflate(R.layout.vertical_basket_layout, this, true)
 
         radius = context.resources.getDimension(R.dimen.action_card_corner_radius)
         cardElevation = context.resources.getDimension(R.dimen.action_card_elevation)
 
-        minusBtn = findViewById(R.id.minusBtn)
-        deleteBtn = findViewById(R.id.deleteBtn)
-        addBtn = findViewById(R.id.addBtn)
-        countTv = findViewById(R.id.countTv)
+        minusBtn = findViewById(R.id.vMinusBtn)
+        deleteBtn = findViewById(R.id.vDeleteBtn)
+        addBtn = findViewById(R.id.vAddBtn)
+        countTv = findViewById(R.id.vCountTv)
 
-        linearLayout = findViewById(R.id.viewContainer)
+        linearLayout = findViewById(R.id.vViewContainer)
         //Init custom view
 
         //set custom view dp
@@ -64,27 +67,34 @@ class BasketLayoutView @JvmOverloads constructor(
         setTextContainerSize(textContainerHeight, textContainerWidth)
         countTv.setTextSize(TypedValue.COMPLEX_UNIT_SP, countTextSize)
 
+        countTv.customSetVisibility(false)
+        deleteBtn.customSetVisibility(false)
+        minusBtn.customSetVisibility(false)
         countTv.text = count.toString()
     }
 
-    fun setOnClickDecrease(action: () -> Unit) {
+
+    fun setOnClickDecrease(action: (Int) -> Unit) {
         minusBtn.setOnClickListener {
-            action()
             decraseItem()
+            action(count)
+
         }
     }
 
-    fun setOnClickIncrease(action: () -> Unit) {
+    fun setOnClickIncrease(action: (Int) -> Unit) {
         addBtn.setOnClickListener {
-            action()
             increaseItem()
+            action(count)
+
         }
     }
 
-    fun setOnClickTrash(action: () -> Unit) {
+    fun setOnClickTrash(action: (Int) -> Unit) {
         deleteBtn.setOnClickListener {
-            action
             clearItemCount()
+            action(count)
+
         }
 
     }
@@ -116,6 +126,7 @@ class BasketLayoutView @JvmOverloads constructor(
         }
     }
 
+    @SuppressLint("WrongConstant")
     private fun applyOrientation() {
         linearLayout.orientation = orientation
 //        swapViewsInLinearLayout()
@@ -140,11 +151,11 @@ class BasketLayoutView @JvmOverloads constructor(
     private fun decraseItem() {
 
         if (count > 1) {
-            count--
+           count--
             if (count == 1) {
                 deleteBtn.customSetVisibility(true)
                 minusBtn.customSetVisibility(false)
-            }else{
+            } else {
                 deleteBtn.customSetVisibility(false)
                 minusBtn.customSetVisibility(true)
             }
@@ -154,14 +165,24 @@ class BasketLayoutView @JvmOverloads constructor(
 
     private fun increaseItem() {
         count++
-        deleteBtn.customSetVisibility(false)
-        minusBtn.customSetVisibility(true)
+        countTv.customSetVisibility(true)
+        if (count == 1) {
+            deleteBtn.customSetVisibility(true)
+            minusBtn.customSetVisibility(false)
+        } else {
+            deleteBtn.customSetVisibility(false)
+            minusBtn.customSetVisibility(true)
+        }
         countTv.text = count.toString()
 
     }
 
     private fun clearItemCount() {
-       this.customSetVisibility(false)
+        deleteBtn.customSetVisibility(false)
+        minusBtn.customSetVisibility(false)
+        count = 0
+        countTv.customSetVisibility(false)
+
     }
 
 }

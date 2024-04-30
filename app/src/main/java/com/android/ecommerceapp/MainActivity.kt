@@ -16,6 +16,7 @@ import androidx.navigation.ui.setupActionBarWithNavController
 import com.android.ecommerceapp.databinding.ActivityMainBinding
 import com.android.ecommerceapp.model.enums.MessageType
 import com.android.ecommerceapp.util.heightRatio
+import com.android.ecommerceapp.util.toFormat
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -24,6 +25,7 @@ class MainActivity : AppCompatActivity() {
     private var isShowingDialog = false
     private var isShowingInfo = false
     private val constraintSet = ConstraintSet()
+    private var currentPrice:Double = 0.0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -52,6 +54,13 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         }
+    }
+
+    fun setBasketPrice(price:Double){
+
+        currentPrice+=price
+
+        binding.basketPriceText.text = currentPrice.toFormat()
     }
 
     fun showProgress() {
