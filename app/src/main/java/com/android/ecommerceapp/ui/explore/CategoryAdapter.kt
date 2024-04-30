@@ -8,17 +8,22 @@ import androidx.recyclerview.widget.RecyclerView
 import com.android.ecommerceapp.databinding.CategoryItemBinding
 
 import com.android.ecommerceapp.model.Product
+import com.android.ecommerceapp.model.SelectedItems
 import com.android.ecommerceapp.util.loadUrl
 
-class CategoryAdapter(private val categoryList: List<Product>) :RecyclerView.Adapter<CategoryAdapter.ViewHolder>() {
+class CategoryAdapter(private val categoryList: List<Product>) :
+    RecyclerView.Adapter<CategoryAdapter.ViewHolder>() {
 
-    inner class ViewHolder(val binding: CategoryItemBinding):RecyclerView.ViewHolder(binding.root)
+    inner class ViewHolder(val binding: CategoryItemBinding) : RecyclerView.ViewHolder(binding.root)
 
 
     var listener: ((Double) -> Unit)? = null
 
+    private val selectedItemsList = ArrayList<SelectedItems>()
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val binding = CategoryItemBinding.inflate(LayoutInflater.from(parent.context),parent,false)
+        val binding =
+            CategoryItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return ViewHolder(binding)
     }
 
@@ -26,8 +31,9 @@ class CategoryAdapter(private val categoryList: List<Product>) :RecyclerView.Ada
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val categoryItem = categoryList[position]
         holder.binding.title.text = categoryItem.title
-        holder.binding.price.text = (categoryItem.price.toString()+" $")
+        holder.binding.price.text = (categoryItem.price.toString() + " $")
         holder.binding.image.loadUrl(categoryItem.image)
+
 
         holder.binding.root.setOnClickListener {
 
@@ -38,28 +44,30 @@ class CategoryAdapter(private val categoryList: List<Product>) :RecyclerView.Ada
 
             println("id $categoryItem")
             bundle.apply {
-                putString("itemId",categoryItem.id.toString())
+                putString("itemId", categoryItem.id.toString())
             }
 //            Navigation.findNavController(it).navigate(R.id.action_exploreFragment_to_detailFragment,bundle)
         }
 
-
+        val selectedItem =
         holder.binding.basketView.setOnClickIncrease {
 
-           println(it)
+            selectedItemsList.add(SelectedItems(categoryItem.id,it))
+
+            println(selectedItemsList)
 
         }
         holder.binding.basketView.setOnClickDecrease {
-            println(it)
+
         }
         holder.binding.basketView.setOnClickTrash {
-            println(it)
+
         }
 
     }
 
 
     override fun getItemCount(): Int {
-       return categoryList.size
+        return categoryList.size
     }
 }
