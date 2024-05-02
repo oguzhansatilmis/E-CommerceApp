@@ -50,7 +50,6 @@ abstract class BaseFragment<VB:ViewBinding,VM:ViewModel,A:Activity>(
 
     override fun onDestroyView() {
         super.onDestroyView()
-        println("onDestroyView Run")
         _binding = null
 
     }

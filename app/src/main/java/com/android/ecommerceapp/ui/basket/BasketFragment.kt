@@ -10,14 +10,33 @@ import com.android.ecommerceapp.MainActivity
 import com.android.ecommerceapp.R
 import com.android.ecommerceapp.base.BaseFragment
 import com.android.ecommerceapp.databinding.FragmentBasketBinding
+import com.android.ecommerceapp.ui.explore.ExploreFragment
+import com.android.ecommerceapp.ui.explore.ExploreViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class BasketFragment : BaseFragment<FragmentBasketBinding,BasketViewModel,MainActivity>(FragmentBasketBinding::inflate) {
+class BasketFragment :
+    BaseFragment<FragmentBasketBinding, ExploreViewModel, MainActivity>(FragmentBasketBinding::inflate) {
 
-    override val viewModel: BasketViewModel by viewModels<BasketViewModel>()
+    override val viewModel: ExploreViewModel by viewModels(
+        ownerProducer = {
+
+            this
+
+
+        }
+
+    )
+
     override fun onCreateFinished() {
-        println("")
+
+
+        viewModel.getCategoryItems()
+        viewModel.data.observe(viewLifecycleOwner) {
+
+           binding.item.text = it.title
+        }
+
     }
 
     override fun initializeListeners() {

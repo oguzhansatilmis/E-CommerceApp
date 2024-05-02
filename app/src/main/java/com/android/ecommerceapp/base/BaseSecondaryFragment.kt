@@ -34,6 +34,8 @@ abstract class BaseSecondaryFragment<VB: ViewBinding,VM: ViewModel,VM2:ViewModel
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+
+
         onCreateFinished()
         initializeListeners()
         observeEvents()
@@ -47,7 +49,6 @@ abstract class BaseSecondaryFragment<VB: ViewBinding,VM: ViewModel,VM2:ViewModel
 
     override fun onDestroyView() {
         super.onDestroyView()
-        println("onDestroyView Run")
         _binding = null
 
     }

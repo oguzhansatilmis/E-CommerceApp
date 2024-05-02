@@ -5,28 +5,46 @@ import android.widget.Toast
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.navArgs
 import com.android.ecommerceapp.MainActivity
+import com.android.ecommerceapp.R
 import com.android.ecommerceapp.base.BaseFragment
+import com.android.ecommerceapp.base.BaseSecondaryFragment
 import com.android.ecommerceapp.databinding.FragmentDetailBinding
 import com.android.ecommerceapp.model.FavoritesEntity
 import com.android.ecommerceapp.model.Product
 import com.android.ecommerceapp.model.Result
 import com.android.ecommerceapp.model.enums.MessageType
+import com.android.ecommerceapp.ui.explore.ExploreFragment
+import com.android.ecommerceapp.ui.explore.ExploreViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class DetailFragment :
-    BaseFragment<FragmentDetailBinding, DetailViewModel, MainActivity>(FragmentDetailBinding::inflate) {
-
+class DetailFragment() :
+    BaseSecondaryFragment<FragmentDetailBinding, DetailViewModel,ExploreViewModel, MainActivity>(FragmentDetailBinding::inflate) {
+        private lateinit var instance:ExploreFragment
     override val viewModel: DetailViewModel by viewModels<DetailViewModel>()
+    override val viewModel2: ExploreViewModel by viewModels<ExploreViewModel>(
+        ownerProducer = {
+            instance
+
+        }
+    )
     private val args: DetailFragmentArgs by navArgs()
     private var product: Product? = null
     override fun onCreateFinished() {
         getItemDetail()
+
+        instance = ExploreFragment.instance
+        println(ExploreFragment.instance.deneme)
+
+
     }
 
     override fun initializeListeners() {
         addFavorite()
         deleteFavorite()
+        viewModel2.data.observe(this){
+            println("gelen veri $it")
+        }
     }
 
     override fun observeEvents() {
