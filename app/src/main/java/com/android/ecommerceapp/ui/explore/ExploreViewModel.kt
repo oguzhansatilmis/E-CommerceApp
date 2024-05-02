@@ -23,8 +23,6 @@ class ExploreViewModel @Inject constructor(
     private val repository: CommerceRepository
 ) : ViewModel() {
 
-    private var _data = MutableLiveData<SelectedItems>()
-    val data: LiveData<SelectedItems> = _data
 
     private val _productsLiveData =
         MutableLiveData<Result<Response<List<Product>>>>(Result.Loading())
@@ -44,9 +42,6 @@ class ExploreViewModel @Inject constructor(
         }
     }
 
-    fun setData(value: SelectedItems) {
-        _data.value = value
-    }
 
     override fun onCleared() {
         println("Explore VM onCleared running")

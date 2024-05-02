@@ -1,4 +1,4 @@
-package com.android.ecommerceapp
+package com.android.ecommerceapp.activity
 
 import android.animation.LayoutTransition
 import androidx.appcompat.app.AppCompatActivity
@@ -7,12 +7,9 @@ import android.view.KeyEvent
 import android.view.View
 import androidx.constraintlayout.widget.ConstraintSet
 import androidx.core.content.res.ResourcesCompat
-import androidx.navigation.NavController
-import androidx.navigation.NavHostController
 import androidx.navigation.fragment.NavHostFragment
-import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.NavigationUI
-import androidx.navigation.ui.setupActionBarWithNavController
+import com.android.ecommerceapp.R
 import com.android.ecommerceapp.databinding.ActivityMainBinding
 import com.android.ecommerceapp.model.enums.MessageType
 import com.android.ecommerceapp.util.heightRatio
@@ -46,10 +43,10 @@ class MainActivity : AppCompatActivity() {
 
         navHostFragment.navController.addOnDestinationChangedListener { _, destination, _ ->
             when (destination.id) {
-                R.id.exploreFragment,R.id.homeFragment,R.id.basketFragment->{
+                R.id.exploreFragment, R.id.homeFragment, R.id.basketFragment ->{
                     binding.bottomNavigationView.visibility = View.VISIBLE
                 }
-                R.id.detailFragment-> {
+                R.id.detailFragment -> {
                     binding.bottomNavigationView.visibility = View.GONE
                 }
             }

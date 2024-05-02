@@ -1,26 +1,25 @@
 package com.android.ecommerceapp.ui.explore
 
-import android.view.View
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.android.ecommerceapp.MainActivity
+import com.android.ecommerceapp.activity.MainActivity
+import com.android.ecommerceapp.activity.MainViewModel
 import com.android.ecommerceapp.base.BaseFragment
+import com.android.ecommerceapp.base.BaseSecondaryFragment
 import com.android.ecommerceapp.databinding.FragmentExploreBinding
 import com.android.ecommerceapp.model.Product
 import com.android.ecommerceapp.model.Result
-import com.android.ecommerceapp.ui.detail.DetailFragment
 import dagger.hilt.android.AndroidEntryPoint
-import kotlin.math.E
 
 @AndroidEntryPoint
 class ExploreFragment :
-    BaseFragment<FragmentExploreBinding, ExploreViewModel, MainActivity>(FragmentExploreBinding::inflate) {
-    override val viewModel by viewModels<ExploreViewModel>(
-        ownerProducer = {
-           this
-        }
-    )
+    BaseSecondaryFragment<FragmentExploreBinding, ExploreViewModel, MainViewModel, MainActivity>(
+        FragmentExploreBinding::inflate
+    ) {
+    override val viewModel by viewModels<ExploreViewModel>()
+    override val viewModel2 by activityViewModels<MainViewModel>()
     private lateinit var adapter: CategoryAdapter
     private lateinit var electronicsAdapter: CategoryAdapter
 
@@ -74,7 +73,7 @@ class ExploreFragment :
         var totalPrice = 0.0
         adapter.listener = {
 
-            viewModel.setData(it[0])
+            viewModel2.setSelectedItem(it)
 
             it.forEach { price ->
 
@@ -86,12 +85,6 @@ class ExploreFragment :
 
     }
 
-    companion object {
-
-        val instance = ExploreFragment()
-    }
-
-    val deneme = "deneme"
 
     override fun onDestroyView() {
         super.onDestroyView()

@@ -2,7 +2,7 @@ package com.android.ecommerceapp.ui.favorites
 
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.android.ecommerceapp.MainActivity
+import com.android.ecommerceapp.activity.MainActivity
 import com.android.ecommerceapp.base.BaseFragment
 import com.android.ecommerceapp.databinding.FragmentFavoritesBinding
 import com.android.ecommerceapp.model.FavoritesEntity
