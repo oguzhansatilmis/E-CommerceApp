@@ -39,10 +39,9 @@ class VerticalBasketLayout @JvmOverloads constructor(
 
     private var orientation = 1
 
-    private var count = 0
+    private var count = 0 //init value
 
     init {
-
         isInEditMode
         loadAttributes(attrs)
         LayoutInflater.from(context).inflate(R.layout.vertical_basket_layout, this, true)
@@ -70,7 +69,28 @@ class VerticalBasketLayout @JvmOverloads constructor(
         countTv.customSetVisibility(false)
         deleteBtn.customSetVisibility(false)
         minusBtn.customSetVisibility(false)
+    }
+
+
+    fun updateCount(newCount:Int){
+
+        count = newCount
+
         countTv.text = count.toString()
+
+        if(count>0){
+            countTv.customSetVisibility(true)
+
+            if (count ==1){
+                deleteBtn.customSetVisibility(true)
+                minusBtn.customSetVisibility(false)
+            }
+            else{
+                deleteBtn.customSetVisibility(false)
+                minusBtn.customSetVisibility(true)
+            }
+
+        }
     }
 
 

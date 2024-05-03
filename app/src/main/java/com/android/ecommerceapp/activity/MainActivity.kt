@@ -43,7 +43,7 @@ class MainActivity : AppCompatActivity() {
 
         navHostFragment.navController.addOnDestinationChangedListener { _, destination, _ ->
             when (destination.id) {
-                R.id.exploreFragment, R.id.homeFragment, R.id.basketFragment ->{
+                R.id.exploreFragment, R.id.homeFragment, R.id.orderFragment ->{
                     binding.bottomNavigationView.visibility = View.VISIBLE
                 }
                 R.id.detailFragment -> {
@@ -51,6 +51,11 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         }
+    }
+
+    fun getBinding() :ActivityMainBinding{
+
+        return binding
     }
 
     fun setBasketPrice(price:Double){

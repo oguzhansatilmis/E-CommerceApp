@@ -36,7 +36,7 @@ class BasketLayoutView @JvmOverloads constructor(
 
     private var orientation = 0
 
-    private var count = 1
+    private var count = 0
 
 
     init {
@@ -64,7 +64,26 @@ class BasketLayoutView @JvmOverloads constructor(
         setTextContainerSize(textContainerHeight, textContainerWidth)
         countTv.setTextSize(TypedValue.COMPLEX_UNIT_SP, countTextSize)
 
+    }
+    fun updateCount(newCount:Int){
+
+        count = newCount
+
         countTv.text = count.toString()
+
+        if(count>0){
+            countTv.customSetVisibility(true)
+
+            if (count ==1){
+                deleteBtn.customSetVisibility(true)
+                minusBtn.customSetVisibility(false)
+            }
+            else{
+                deleteBtn.customSetVisibility(false)
+                minusBtn.customSetVisibility(true)
+            }
+
+        }
     }
 
     fun setOnClickDecrease(action: () -> Unit) {

@@ -3,14 +3,15 @@ package com.android.ecommerceapp.ui.explore
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.LinearLayoutManager
+import com.android.ecommerceapp.R
+import com.android.ecommerceapp.activity.Items
 import com.android.ecommerceapp.activity.MainActivity
 import com.android.ecommerceapp.activity.MainViewModel
-import com.android.ecommerceapp.base.BaseFragment
 import com.android.ecommerceapp.base.BaseSecondaryFragment
 import com.android.ecommerceapp.databinding.FragmentExploreBinding
-import com.android.ecommerceapp.model.Product
+import com.android.ecommerceapp.model.ExploreProduct
 import com.android.ecommerceapp.model.Result
+import com.android.ecommerceapp.ui.order.OrderFragment
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -21,75 +22,73 @@ class ExploreFragment :
     override val viewModel by viewModels<ExploreViewModel>()
     override val viewModel2 by activityViewModels<MainViewModel>()
     private lateinit var adapter: CategoryAdapter
-    private lateinit var electronicsAdapter: CategoryAdapter
-
+//    private lateinit var electronicsAdapter: CategoryAdapter
 
     override fun onCreateFinished() {
-        viewModel.getCategoryItems()
-        binding.recyclerview.addItemDecoration(ItemDecoration())
 
-        activity().hideProgress()
+
+
+        binding.recyclerview.addItemDecoration(ItemDecoration())
     }
 
     override fun initializeListeners() {
+        activity().getBinding().basketPriceIcon.setOnClickListener {
+
+            val orderFragment = OrderFragment()
+            val transaction = requireActivity().supportFragmentManager.beginTransaction()
+            transaction.replace(R.id.fragmentContainerView, orderFragment)
+            transaction.addToBackStack(null)
+            transaction.commit()
+        }
+    }
+    override fun observeEvents() {
+
+
+        if(viewModel2.boolean){
+            viewModel2.getCategoryItems()
+            observeProductLiveData()
+        }
+        else{
+            setupAdapter(Items.exploreProductList)
+        }
 
 
     }
 
-    override fun observeEvents() {
-        viewModel.productsLiveData.observe(viewLifecycleOwner) {
+    private fun observeProductLiveData(){
+
+        viewModel2.productsLiveData.observe(viewLifecycleOwner) {
             when (it) {
                 is Result.Success -> {
                     activity().hideProgress()
                     it.data?.let { response ->
-                        response.body()?.let { item ->
-                            setupAdapter(item)
-                        }
+                        setupAdapter(response)
                     }
                 }
-
                 is Result.Loading -> {
                     activity().showProgress()
                 }
-
                 is Result.Error -> {
                     activity().hideProgress()
                 }
             }
         }
-    }
 
-    private fun setupAdapter(categoryList: List<Product>) {
+    }
+    private fun setupAdapter(categoryList: List<ExploreProduct>) {
         adapter = CategoryAdapter(categoryList)
-        electronicsAdapter = CategoryAdapter(categoryList)
+//        electronicsAdapter = CategoryAdapter(categoryList)
         binding.apply {
-            recyclerview.layoutManager = GridLayoutManager(requireContext(), 3)
+            recyclerview.layoutManager = GridLayoutManager(requireContext(), 2)
             recyclerview.adapter = adapter
 
-            electronicRecyclerview.layoutManager =
-                LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
-            electronicRecyclerview.adapter = electronicsAdapter
+//            electronicRecyclerview.layoutManager =
+//                LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
+//            electronicRecyclerview.adapter = electronicsAdapter
         }
-        var totalPrice = 0.0
-        adapter.listener = {
+        adapter.listenerItemClick = { count,id ->
 
-            viewModel2.setSelectedItem(it)
-
-            it.forEach { price ->
-
-                totalPrice += price.price
-            }
-            activity().setBasketPrice(totalPrice)
-            totalPrice = 0.0
-        }
-
-    }
-
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-
-        println("ExploreFragment onDestroyView")
+     viewModel2.updateItemCount(count,id) }
     }
 }
 

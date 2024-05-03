@@ -21,17 +21,10 @@ class BasketFragment :
 
     override fun onCreateFinished() {
 
-
-        viewModel2.selectedItem.observe(this){
-            println(it)
-        }
-
     }
-
     override fun initializeListeners() {
         println("")
     }
-
     override fun observeEvents() {
         println("")
     }

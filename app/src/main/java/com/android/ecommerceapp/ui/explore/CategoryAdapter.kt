@@ -8,78 +8,70 @@ import androidx.navigation.Navigation
 import androidx.recyclerview.widget.RecyclerView
 import com.android.ecommerceapp.R
 import com.android.ecommerceapp.databinding.CategoryItemBinding
+import com.android.ecommerceapp.model.ExploreProduct
 
 import com.android.ecommerceapp.model.Product
 import com.android.ecommerceapp.model.SelectedItems
 import com.android.ecommerceapp.util.loadUrl
 
-class CategoryAdapter(private val categoryList: List<Product>) :
-    RecyclerView.Adapter<CategoryAdapter.ViewHolder>() {
+class CategoryAdapter(private val categoryList: List<ExploreProduct>) : RecyclerView.Adapter<CategoryAdapter.ViewHolder>() {
 
     inner class ViewHolder(val binding: CategoryItemBinding) : RecyclerView.ViewHolder(binding.root)
 
 
-    var listener: ((ArrayList<SelectedItems>) -> Unit)? = null
-
-    private val selectedItemsList = arrayListOf<SelectedItems>()
+    var listenerItemClick: ((Int,Long) -> Unit)? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val binding =
-            CategoryItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        val binding = CategoryItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return ViewHolder(binding)
     }
 
-    @SuppressLint("SetTextI18n")
+    @SuppressLint("SetTextI18n", "ResourceType")
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val categoryItem = categoryList[position]
         holder.binding.title.text = categoryItem.title
         holder.binding.price.text = (categoryItem.price.toString() + " $")
-        holder.binding.image.loadUrl(categoryItem.image)
 
+
+        categoryItem.image?.let {
+            holder.binding.image.loadUrl(it)
+        }
+
+        println("count ${categoryItem.count}")
+        holder.binding.basketView.updateCount(categoryItem.count)
 
         holder.binding.root.setOnClickListener {
 
-            val isSelected = holder.binding.cardview.isSelected
-            holder.binding.cardview.isSelected = !isSelected
+//            val isSelected = holder.binding.cardview.isSelected
+//            holder.binding.cardview.isSelected = !isSelected
+//
+//            val bundle = Bundle()
+//            bundle.apply {
+//                putString("itemId", categoryItem.id.toString())
+//            }
+//
+//          Navigation.findNavController(it).navigate(R.id.action_exploreFragment_to_detailFragment,bundle)
 
-            val bundle = Bundle()
-            bundle.apply {
-                putString("itemId", categoryItem.id.toString())
+        }
+        holder.binding.basketView.setOnClickIncrease {count->
+
+            listenerItemClick?.let {
+                it(count,categoryItem.id!!)
             }
 
-          Navigation.findNavController(it).navigate(R.id.action_exploreFragment_to_detailFragment,bundle)
-
         }
-        holder.binding.basketView.setOnClickIncrease {
-
-            selectedItemsList.add(SelectedItems(categoryItem.id, categoryItem.title,categoryItem.price,categoryItem.image))
-
-            val returnList = getSelectedItemList()
-
-            listener?.invoke(returnList)
-
+        holder.binding.basketView.setOnClickDecrease {count->
+            listenerItemClick?.let {
+                it(count,categoryItem.id!!)
+            }
         }
-        holder.binding.basketView.setOnClickDecrease {
-            selectedItemsList.remove(SelectedItems(categoryItem.id, categoryItem.title,categoryItem.price,categoryItem.image))
-            val returnList = getSelectedItemList()
+        holder.binding.basketView.setOnClickTrash {count->
 
-            listener?.invoke(returnList)
-        }
-        holder.binding.basketView.setOnClickTrash {
-
-            selectedItemsList.remove(SelectedItems(categoryItem.id, categoryItem.title,categoryItem.price,categoryItem.image))
-            val returnList = getSelectedItemList()
-
-            listener?.invoke(returnList)
-
+            listenerItemClick?.let {
+                it(count,categoryItem.id!!)
+            }
         }
     }
-
-   private fun getSelectedItemList():ArrayList<SelectedItems>{
-
-        return selectedItemsList
-    }
-
     override fun getItemCount(): Int {
         return categoryList.size
     }
