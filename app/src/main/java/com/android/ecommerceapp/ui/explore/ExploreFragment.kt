@@ -26,23 +26,23 @@ class ExploreFragment :
     override val viewModel by viewModels<ExploreViewModel>()
     override val viewModel2 by activityViewModels<MainViewModel>()
     private lateinit var adapter: CategoryAdapter
-    private var productList = arrayListOf<ExploreProduct>()
-    private var fetchCount: ArrayList<ExploreProduct>? = null
-
-    @Inject
-    lateinit var sharedPreferencesServices: SharedPreferencesServices
+    private var customerOrderItem: ArrayList<ExploreProduct>? = null
 
     override fun onCreateFinished() {
-        activity().showProgress()
         binding.recyclerview.addItemDecoration(ItemDecoration())
-        fetchCount = sharedPreferencesServices.fetch<ArrayList<ExploreProduct>>(SharedPreferencesKey.PRODUCT)
-        viewModel. getCategoryItems()
+        viewModel.getCategoryItems()
     }
-    override fun initializeListeners() {}
+
+    override fun initializeListeners() {
+        customerOrderItem = viewModel.fetchCount()
+        viewModel2.calculateOrderPrice()
+        activity().activityBinding.basketPriceText.text = viewModel2.getTotalAccount()
+    }
 
     override fun observeEvents() {
         observeProductLiveData()
     }
+
     private fun observeProductLiveData() {
 
         viewModel.productsLiveData.observe(viewLifecycleOwner) {
@@ -50,7 +50,7 @@ class ExploreFragment :
                 is Result.Success -> {
                     activity().hideProgress()
                     it.data?.let { response ->
-                        setupAdapter(response, fetchCount)
+                        setupAdapter(response, customerOrderItem)
                     }
                 }
 
@@ -65,6 +65,7 @@ class ExploreFragment :
         }
 
     }
+
     private fun setupAdapter(
         categoryList: List<ExploreProduct>,
         fetchItemCount: ArrayList<ExploreProduct>? = null
@@ -75,13 +76,9 @@ class ExploreFragment :
             recyclerview.adapter = adapter
 
             adapter.listenerItemClick = { newItem ->
-                val existingItem = productList.find { it.id == newItem.id }
-                if (existingItem != null) {
-                    existingItem.count = newItem.count
-                } else {
-                    productList.add(newItem)
-                }
-                sharedPreferencesServices.save(productList.toMutableList(), SharedPreferencesKey.PRODUCT)
+                viewModel.customerUpdateItemCount(newItem)
+                activity().activityBinding.basketPriceText.text = viewModel2.calculateOrderPrice()
+
             }
         }
     }

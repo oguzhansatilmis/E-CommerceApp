@@ -33,10 +33,12 @@ class OrderFragment :
     }
 
     override fun initializeListeners() {
-        val fetchOrderItem = sharedPreferencesServices.fetch<ArrayList<ExploreProduct>>(SharedPreferencesKey.PRODUCT)?.toList()
-         nonZeroCountItems = fetchOrderItem?.filter { it.count != 0 }!!.toMutableList()
-        nonZeroCountItems?.let {
-            setupAdapter(it)
+      sharedPreferencesServices.fetch<ArrayList<ExploreProduct>>(SharedPreferencesKey.PRODUCT)?.let { it ->
+
+          nonZeroCountItems = it.filter { it.count != 0 }.toMutableList()
+            nonZeroCountItems?.let {
+                setupAdapter(it)
+            }
         }
     }
 
@@ -55,14 +57,17 @@ class OrderFragment :
                 } else {
                     nonZeroCountItems?.add(newItem)
                 }
-                nonZeroCountItems?.let { sharedPreferencesServices.save(it.toMutableList(), SharedPreferencesKey.PRODUCT)
+                nonZeroCountItems?.let { products ->
 
-                    val result = sharedPreferencesServices.fetch<ArrayList<ExploreProduct>>(SharedPreferencesKey.PRODUCT)?.toList()
+                    sharedPreferencesServices.save(products.toMutableList(), SharedPreferencesKey.PRODUCT)
 
-                    if (result != null) {
-                        adapter.updateList(result)
+                    sharedPreferencesServices.fetch<ArrayList<ExploreProduct>>(SharedPreferencesKey.PRODUCT)?.let {
+                        adapter.updateList(it)
                     }
+
                 }
+                viewModel2.calculateOrderPrice()
+                activity().activityBinding.basketPriceText.text = viewModel2.getTotalAccount()
             }
         }
     }

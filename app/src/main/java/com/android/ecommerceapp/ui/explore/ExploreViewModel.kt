@@ -11,6 +11,8 @@ import com.android.ecommerceapp.model.Product
 import com.android.ecommerceapp.model.Result
 import com.android.ecommerceapp.model.SelectedItems
 import com.android.ecommerceapp.repository.CommerceRepository
+import com.android.ecommerceapp.sp.SharedPreferencesKey
+import com.android.ecommerceapp.sp.SharedPreferencesServices
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -27,7 +29,16 @@ class ExploreViewModel @Inject constructor(
     private val _productsLiveData = MutableLiveData<Result<List<ExploreProduct>>>(Result.Loading())
     val productsLiveData: LiveData<Result<List<ExploreProduct>>> = _productsLiveData
 
-     fun getCategoryItems() {
+    private var productList = arrayListOf<ExploreProduct>()
+
+    private var fetchCount: ArrayList<ExploreProduct>? = null
+
+    @Inject
+    lateinit var sharedPreferencesServices: SharedPreferencesServices
+
+
+
+    fun getCategoryItems() {
         viewModelScope.launch {
             val productItems = repository.getAllProduct()
 
@@ -53,6 +64,23 @@ class ExploreViewModel @Inject constructor(
             }
         }
 
+    }
+
+    fun fetchCount(): ArrayList<ExploreProduct>? {
+        fetchCount =
+            sharedPreferencesServices.fetch<ArrayList<ExploreProduct>>(SharedPreferencesKey.PRODUCT)
+        return fetchCount
+    }
+
+    fun customerUpdateItemCount(newItem: ExploreProduct) {
+
+        val existingItem = productList.find { it.id == newItem.id }
+        if (existingItem != null) {
+            existingItem.count = newItem.count
+        } else {
+            productList.add(newItem)
+        }
+        sharedPreferencesServices.save(productList.toMutableList(), SharedPreferencesKey.PRODUCT)
     }
 
 //    override fun onCleared() {
