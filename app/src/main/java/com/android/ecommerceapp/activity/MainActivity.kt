@@ -53,10 +53,8 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    fun getBinding() :ActivityMainBinding{
-
-        return binding
-    }
+    val activityBinding:ActivityMainBinding
+        get() = binding
 
     fun setBasketPrice(price:Double){
 

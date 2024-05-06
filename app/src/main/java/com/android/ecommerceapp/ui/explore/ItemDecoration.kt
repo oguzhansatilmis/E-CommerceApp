@@ -15,8 +15,9 @@ class ItemDecoration : RecyclerView.ItemDecoration() {
         state: RecyclerView.State
     ) {
         outRect.left = 39
-        outRect.top = 19
-        outRect.bottom = 19
+        outRect.top = 39
+        outRect.bottom = 39
+        outRect.bottom = 39
     }
 
 }

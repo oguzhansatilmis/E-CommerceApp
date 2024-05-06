@@ -36,7 +36,8 @@ class BasketLayoutView @JvmOverloads constructor(
 
     private var orientation = 0
 
-    private var count = 0
+    private var count = 0 //init value
+
 
 
     init {
@@ -86,24 +87,27 @@ class BasketLayoutView @JvmOverloads constructor(
         }
     }
 
-    fun setOnClickDecrease(action: () -> Unit) {
+    fun setOnClickDecrease(action: (Int) -> Unit) {
         minusBtn.setOnClickListener {
-            action()
             decraseItem()
+            action(count)
+
         }
     }
 
-    fun setOnClickIncrease(action: () -> Unit) {
+    fun setOnClickIncrease(action: (Int) -> Unit) {
         addBtn.setOnClickListener {
-            action()
             increaseItem()
+            action(count)
+
         }
     }
 
-    fun setOnClickTrash(action: () -> Unit) {
+    fun setOnClickTrash(action: (Int) -> Unit) {
         deleteBtn.setOnClickListener {
-            action
             clearItemCount()
+            action(count)
+
         }
 
     }
@@ -163,7 +167,7 @@ class BasketLayoutView @JvmOverloads constructor(
             if (count == 1) {
                 deleteBtn.customSetVisibility(true)
                 minusBtn.customSetVisibility(false)
-            }else{
+            } else {
                 deleteBtn.customSetVisibility(false)
                 minusBtn.customSetVisibility(true)
             }
@@ -173,14 +177,25 @@ class BasketLayoutView @JvmOverloads constructor(
 
     private fun increaseItem() {
         count++
-        deleteBtn.customSetVisibility(false)
-        minusBtn.customSetVisibility(true)
+        countTv.customSetVisibility(true)
+        if (count == 1) {
+            deleteBtn.customSetVisibility(true)
+            minusBtn.customSetVisibility(false)
+        } else {
+            deleteBtn.customSetVisibility(false)
+            minusBtn.customSetVisibility(true)
+        }
         countTv.text = count.toString()
 
     }
 
     private fun clearItemCount() {
-       this.customSetVisibility(false)
+        deleteBtn.customSetVisibility(false)
+        minusBtn.customSetVisibility(false)
+        count = 0
+        countTv.customSetVisibility(false)
+
     }
+
 
 }

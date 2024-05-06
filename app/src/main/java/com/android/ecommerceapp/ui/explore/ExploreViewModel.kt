@@ -4,7 +4,9 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.android.ecommerceapp.activity.Items
 import com.android.ecommerceapp.model.BaseException
+import com.android.ecommerceapp.model.ExploreProduct
 import com.android.ecommerceapp.model.Product
 import com.android.ecommerceapp.model.Result
 import com.android.ecommerceapp.model.SelectedItems
@@ -22,27 +24,37 @@ import kotlin.coroutines.CoroutineContext
 class ExploreViewModel @Inject constructor(
     private val repository: CommerceRepository
 ) : ViewModel() {
-//    private val _productsLiveData = MutableLiveData<Result<Response<List<Product>>>>(Result.Loading())
-//    val productsLiveData: LiveData<Result<Response<List<Product>>>> = _productsLiveData
-//
-//    init {
-//        getCategoryItems()
-//    }
-//    private fun getCategoryItems() {
-//        viewModelScope.launch {
-//            val productItems = repository.getAllProduct()
-//
-//            productItems?.let { response ->
-//                if (response.isSuccessful) {
-//                    _productsLiveData.value = Result.Success(response)
-//                } else {
-//                    _productsLiveData.value = Result.Error("Error message", response)
-//                }
-//            }
-//        }
-//    }
-//
-//
+    private val _productsLiveData = MutableLiveData<Result<List<ExploreProduct>>>(Result.Loading())
+    val productsLiveData: LiveData<Result<List<ExploreProduct>>> = _productsLiveData
+
+     fun getCategoryItems() {
+        viewModelScope.launch {
+            val productItems = repository.getAllProduct()
+
+            productItems?.let { response ->
+                if (response.isSuccessful) {
+                    val responseBody = response.body()
+                    responseBody?.let { body ->
+
+                        val exploreProductList = body.map { item ->
+                            ExploreProduct(
+                                id = item.id,
+                                title = item.title,
+                                price = item.price,
+                                image = item.image,
+                            )
+                        }
+
+                        Items.exploreProductList = exploreProductList
+                        _productsLiveData.value = Result.Success(exploreProductList)
+                    }
+                }
+                _productsLiveData.value = Result.Error("exploreProduct Error")
+            }
+        }
+
+    }
+
 //    override fun onCleared() {
 //        println("Explore VM onCleared running")
 //    }

@@ -3,16 +3,16 @@ package com.android.ecommerceapp.ui.order
 import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.android.ecommerceapp.databinding.OrderitemBinding
 
 import com.android.ecommerceapp.model.ExploreProduct
-import com.android.ecommerceapp.util.customSetVisibility
 import com.android.ecommerceapp.util.loadUrl
 
-class OrderAdapter(private val orderList:List<ExploreProduct>):RecyclerView.Adapter<OrderAdapter.ViewHolder>() {
+class OrderAdapter(private var orderList:List<ExploreProduct>?=null):RecyclerView.Adapter<OrderAdapter.ViewHolder>() {
     inner class ViewHolder( val binding: OrderitemBinding):RecyclerView.ViewHolder(binding.root)
-
+    var listenerItemClick: ((ExploreProduct) -> Unit)? = null
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int):ViewHolder {
 
         val binding = OrderitemBinding.inflate(LayoutInflater.from(parent.context),parent,false)
@@ -21,16 +21,44 @@ class OrderAdapter(private val orderList:List<ExploreProduct>):RecyclerView.Adap
 
     @SuppressLint("SetTextI18n", "ResourceType")
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val orderItem = orderList[position]
-        holder.binding.orderImage.loadUrl(orderItem.image.toString())
-        holder.binding.orderTitle.text = orderItem.title
-        holder.binding.orderPrice.text = (orderItem.price.toString() + " $")
+        val orderItem = orderList?.get(position)
+        holder.binding.orderImage.loadUrl(orderItem?.image.toString())
+        holder.binding.orderTitle.text = orderItem?.title
+        holder.binding.orderPrice.text = (orderItem?.price.toString() + " $")
 
-        holder.binding.orderBasket.updateCount(orderItem.count)
+        holder.binding.orderBasket.updateCount(orderItem!!.count)
 
+        holder.binding.orderBasket.setOnClickIncrease {count->
+
+            listenerItemClick?.let {
+                orderItem.count = count
+                it(orderItem)
+            }
+
+        }
+        holder.binding.orderBasket.setOnClickDecrease {count->
+            listenerItemClick?.let {
+                orderItem.count = count
+                it(orderItem)
+            }
+        }
+        holder.binding.orderBasket.setOnClickTrash {count->
+
+            listenerItemClick?.let {
+                orderItem.count = count
+                it(orderItem)
+            }
+        }
+
+    }
+    fun updateList(newOrderList: List<ExploreProduct>) {
+        val nonZeroCountItems = newOrderList.filter { it.count != 0 }
+        val diffCallBack = orderList?.let { OrderAdapterDiffUtil(it, nonZeroCountItems) }
+        diffCallBack?.let { DiffUtil.calculateDiff(it) }?.dispatchUpdatesTo(this)
+        orderList = nonZeroCountItems
     }
 
     override fun getItemCount(): Int {
-       return orderList.size
+       return orderList?.size ?: 0
     }
 }

@@ -5,7 +5,6 @@ import android.widget.ImageView
 import com.bumptech.glide.Glide
 import java.text.DecimalFormat
 
-
 fun ImageView.loadUrl(path:String)
 {
     Glide.with(this)

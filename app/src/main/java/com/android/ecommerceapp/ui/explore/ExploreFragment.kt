@@ -5,14 +5,18 @@ import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.GridLayoutManager
 import com.android.ecommerceapp.R
 import com.android.ecommerceapp.activity.Items
+import com.android.ecommerceapp.activity.Items.exploreProductList
 import com.android.ecommerceapp.activity.MainActivity
 import com.android.ecommerceapp.activity.MainViewModel
 import com.android.ecommerceapp.base.BaseSecondaryFragment
 import com.android.ecommerceapp.databinding.FragmentExploreBinding
 import com.android.ecommerceapp.model.ExploreProduct
 import com.android.ecommerceapp.model.Result
+import com.android.ecommerceapp.sp.SharedPreferencesKey
+import com.android.ecommerceapp.sp.SharedPreferencesServices
 import com.android.ecommerceapp.ui.order.OrderFragment
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class ExploreFragment :
@@ -22,52 +26,38 @@ class ExploreFragment :
     override val viewModel by viewModels<ExploreViewModel>()
     override val viewModel2 by activityViewModels<MainViewModel>()
     private lateinit var adapter: CategoryAdapter
-//    private lateinit var electronicsAdapter: CategoryAdapter
+    private var productList = arrayListOf<ExploreProduct>()
+    private var fetchCount: ArrayList<ExploreProduct>? = null
+
+    @Inject
+    lateinit var sharedPreferencesServices: SharedPreferencesServices
 
     override fun onCreateFinished() {
-
-
-
+        activity().showProgress()
         binding.recyclerview.addItemDecoration(ItemDecoration())
+        fetchCount = sharedPreferencesServices.fetch<ArrayList<ExploreProduct>>(SharedPreferencesKey.PRODUCT)
+        viewModel. getCategoryItems()
     }
+    override fun initializeListeners() {}
 
-    override fun initializeListeners() {
-        activity().getBinding().basketPriceIcon.setOnClickListener {
-
-            val orderFragment = OrderFragment()
-            val transaction = requireActivity().supportFragmentManager.beginTransaction()
-            transaction.replace(R.id.fragmentContainerView, orderFragment)
-            transaction.addToBackStack(null)
-            transaction.commit()
-        }
-    }
     override fun observeEvents() {
-
-
-        if(viewModel2.boolean){
-            viewModel2.getCategoryItems()
-            observeProductLiveData()
-        }
-        else{
-            setupAdapter(Items.exploreProductList)
-        }
-
-
+        observeProductLiveData()
     }
+    private fun observeProductLiveData() {
 
-    private fun observeProductLiveData(){
-
-        viewModel2.productsLiveData.observe(viewLifecycleOwner) {
+        viewModel.productsLiveData.observe(viewLifecycleOwner) {
             when (it) {
                 is Result.Success -> {
                     activity().hideProgress()
                     it.data?.let { response ->
-                        setupAdapter(response)
+                        setupAdapter(response, fetchCount)
                     }
                 }
+
                 is Result.Loading -> {
                     activity().showProgress()
                 }
+
                 is Result.Error -> {
                     activity().hideProgress()
                 }
@@ -75,20 +65,25 @@ class ExploreFragment :
         }
 
     }
-    private fun setupAdapter(categoryList: List<ExploreProduct>) {
-        adapter = CategoryAdapter(categoryList)
-//        electronicsAdapter = CategoryAdapter(categoryList)
+    private fun setupAdapter(
+        categoryList: List<ExploreProduct>,
+        fetchItemCount: ArrayList<ExploreProduct>? = null
+    ) {
+        adapter = CategoryAdapter(categoryList, fetchItemCount)
         binding.apply {
             recyclerview.layoutManager = GridLayoutManager(requireContext(), 2)
             recyclerview.adapter = adapter
 
-//            electronicRecyclerview.layoutManager =
-//                LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
-//            electronicRecyclerview.adapter = electronicsAdapter
+            adapter.listenerItemClick = { newItem ->
+                val existingItem = productList.find { it.id == newItem.id }
+                if (existingItem != null) {
+                    existingItem.count = newItem.count
+                } else {
+                    productList.add(newItem)
+                }
+                sharedPreferencesServices.save(productList.toMutableList(), SharedPreferencesKey.PRODUCT)
+            }
         }
-        adapter.listenerItemClick = { count,id ->
-
-     viewModel2.updateItemCount(count,id) }
     }
 }
 
