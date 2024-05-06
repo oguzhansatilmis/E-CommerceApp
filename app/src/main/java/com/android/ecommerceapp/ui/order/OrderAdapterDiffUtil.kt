@@ -6,7 +6,7 @@ import com.android.ecommerceapp.model.ExploreProduct
 class OrderAdapterDiffUtil(
     private val oldOrderList: List<ExploreProduct>,
     private val newOrderList: List<ExploreProduct>,
-) : DiffUtil.Callback() {
+) : DiffUtil.Callback(){
     override fun getOldListSize(): Int {
       return oldOrderList.size
     }
@@ -20,6 +20,26 @@ class OrderAdapterDiffUtil(
     }
 
     override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
-        return oldOrderList[oldItemPosition] == newOrderList[newItemPosition]
+        return when{
+            oldOrderList[oldItemPosition].id != newOrderList[newItemPosition].id ->{
+                false
+            }
+            oldOrderList[oldItemPosition].count != newOrderList[newItemPosition].count ->{
+                false
+            }
+            oldOrderList[oldItemPosition].image!= newOrderList[newItemPosition].image ->{
+                false
+            }
+            oldOrderList[oldItemPosition].price != newOrderList[newItemPosition].price ->{
+                false
+            }
+            oldOrderList[oldItemPosition].title != newOrderList[newItemPosition].title ->{
+                false
+            }
+            else ->{
+                true
+            }
+        }
     }
+
 }

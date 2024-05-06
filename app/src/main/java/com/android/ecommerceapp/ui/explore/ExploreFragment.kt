@@ -32,7 +32,6 @@ class ExploreFragment :
         binding.recyclerview.addItemDecoration(ItemDecoration())
         viewModel.getCategoryItems()
     }
-
     override fun initializeListeners() {
         customerOrderItem = viewModel.fetchCount()
         viewModel2.calculateOrderPrice()
@@ -63,9 +62,7 @@ class ExploreFragment :
                 }
             }
         }
-
     }
-
     private fun setupAdapter(
         categoryList: List<ExploreProduct>,
         fetchItemCount: ArrayList<ExploreProduct>? = null

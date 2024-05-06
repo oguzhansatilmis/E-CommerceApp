@@ -34,7 +34,6 @@ class OrderAdapter(private var orderList:List<ExploreProduct>?=null):RecyclerVie
                 orderItem.count = count
                 it(orderItem)
             }
-
         }
         holder.binding.orderBasket.setOnClickDecrease {count->
             listenerItemClick?.let {
@@ -49,15 +48,17 @@ class OrderAdapter(private var orderList:List<ExploreProduct>?=null):RecyclerVie
                 it(orderItem)
             }
         }
-
     }
+    @SuppressLint("NotifyDataSetChanged")
     fun updateList(newOrderList: List<ExploreProduct>) {
         val nonZeroCountItems = newOrderList.filter { it.count != 0 }
-        val diffCallBack = orderList?.let { OrderAdapterDiffUtil(it, nonZeroCountItems) }
-        diffCallBack?.let { DiffUtil.calculateDiff(it) }?.dispatchUpdatesTo(this)
+        val oldList = orderList ?: emptyList()
         orderList = nonZeroCountItems
+        val diffCallback = OrderAdapterDiffUtil(oldList, nonZeroCountItems)
+        val diffResult = DiffUtil.calculateDiff(diffCallback)
+        diffResult.dispatchUpdatesTo(this)
+        notifyDataSetChanged()
     }
-
     override fun getItemCount(): Int {
        return orderList?.size ?: 0
     }

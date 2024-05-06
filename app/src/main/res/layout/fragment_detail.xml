@@ -3,37 +3,70 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
+    android:background="@color/white"
     android:layout_height="match_parent"
     tools:context=".ui.detail.DetailFragment">
 
 
-    <TextView
-        android:id="@+id/itemId"
-        android:layout_width="match_parent"
-        android:layout_height="150dp"
-        android:text="@string/hello_blank_fragment"
-        app:layout_constraintTop_toTopOf="parent" />
-
-
-    <Button
-        android:id="@+id/addFavorite"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="ekle"
+    <ImageView
+        android:id="@+id/detail_imageview"
+        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/itemId">
+        android:scaleType="fitXY"
+        android:layout_marginTop="40dp"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        tools:ignore="MissingConstraints">
 
-    </Button>
+    </ImageView>
+
+    <ImageView
+        android:id="@+id/select_favorites"
+        app:layout_constraintTop_toTopOf="@id/detail_imageview"
+        android:layout_marginStart="20dp"
+        app:layout_constraintStart_toEndOf="@id/detail_imageview"
+        android:background="@drawable/unselect"
+        android:layout_width="25dp"
+        android:layout_height="25dp">
+
+    </ImageView>
+
+    <TextView
+        android:id="@+id/detail_item_title"
+        android:layout_width="wrap_content"
+        android:padding="10dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/detail_imageview"/>
+
+
+    <TextView
+        android:id="@+id/detail_item_price"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="10dp"
+        android:textSize="25sp"
+        android:textColor="@color/black"
+        android:fontFamily="@font/opensans"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/detail_item_title"/>
 
 
     <Button
-        android:id="@+id/deleteFavorite"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="sil"
+        android:id="@+id/add_basket"
+        android:text="Sepete Ekle"
+        app:layout_constraintTop_toBottomOf="@+id/detail_item_price"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/itemId">
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
 
     </Button>
+
+
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
