@@ -9,7 +9,7 @@ import androidx.room.TypeConverters
 import com.android.ecommerceapp.model.FavoritesEntity
 
 @Entity
-@Database(entities = [FavoritesEntity::class], version = 1, exportSchema = false)
+@Database(entities = [FavoritesEntity::class], version =1, exportSchema = false)
 @TypeConverters(RatingConverter::class)
 abstract class CommerceDatabase:RoomDatabase() {
 

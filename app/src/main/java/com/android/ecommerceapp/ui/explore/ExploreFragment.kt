@@ -3,20 +3,14 @@ package com.android.ecommerceapp.ui.explore
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.GridLayoutManager
-import com.android.ecommerceapp.R
-import com.android.ecommerceapp.activity.Items
-import com.android.ecommerceapp.activity.Items.exploreProductList
 import com.android.ecommerceapp.activity.MainActivity
 import com.android.ecommerceapp.activity.MainViewModel
 import com.android.ecommerceapp.base.BaseSecondaryFragment
 import com.android.ecommerceapp.databinding.FragmentExploreBinding
 import com.android.ecommerceapp.model.ExploreProduct
 import com.android.ecommerceapp.model.Result
-import com.android.ecommerceapp.sp.SharedPreferencesKey
-import com.android.ecommerceapp.sp.SharedPreferencesServices
-import com.android.ecommerceapp.ui.order.OrderFragment
+import com.android.ecommerceapp.util.customSetVisibility
 import dagger.hilt.android.AndroidEntryPoint
-import javax.inject.Inject
 
 @AndroidEntryPoint
 class ExploreFragment :
@@ -29,6 +23,10 @@ class ExploreFragment :
     private var customerOrderItem: ArrayList<ExploreProduct>? = null
 
     override fun onCreateFinished() {
+
+        binding.scroolView.customSetVisibility(false)
+        binding.shimmerLayout.customSetVisibility(true)
+        binding.shimmerLayout.startShimmer()
         binding.recyclerview.addItemDecoration(ItemDecoration())
         viewModel.getCategoryItems()
     }
@@ -48,6 +46,9 @@ class ExploreFragment :
             when (it) {
                 is Result.Success -> {
                     activity().hideProgress()
+                    binding.shimmerLayout.stopShimmer()
+                    binding.scroolView.customSetVisibility(true)
+                    binding.shimmerLayout.customSetVisibility(false)
                     it.data?.let { response ->
                         setupAdapter(response, customerOrderItem)
                     }

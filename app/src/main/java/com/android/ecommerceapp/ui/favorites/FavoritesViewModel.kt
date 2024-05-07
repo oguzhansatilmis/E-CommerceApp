@@ -11,21 +11,23 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class FavoritesViewModel @Inject constructor(
-   private val repository: CommerceRepository
-):ViewModel() {
+class FavoritesViewModel @Inject constructor(private val repository: CommerceRepository):ViewModel() {
 
     private val _getUserFavoritesLiveData= MutableLiveData<Result<List<FavoritesEntity>>>(Result.Loading())
     val getUserFavoritesLiveData = _getUserFavoritesLiveData
 
-    fun getUserFavorites(){
+
+     fun getUserFavorites(){
         viewModelScope.launch {
             val result= repository.getFavoritesList()
             result?.let {
-                _getUserFavoritesLiveData.value = Result.Success(result)
+                _getUserFavoritesLiveData.value = Result.Success(it)
             }
-
         }
     }
-
+    fun deleteItemFavorites(favoritesEntity: FavoritesEntity){
+        viewModelScope.launch {
+            repository.deleteItemFavorites(favoritesEntity)
+        }
+    }
 }

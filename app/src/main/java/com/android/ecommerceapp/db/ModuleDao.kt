@@ -23,4 +23,8 @@ interface ModuleDao {
 
     @Delete
     fun deleteItemFavoritesList(favoritesEntity:FavoritesEntity)
+
+
+    @Query("DELETE FROM favorites_table WHERE id = :id")
+    fun deleteItemFavoritesListById(id: Long)
 }

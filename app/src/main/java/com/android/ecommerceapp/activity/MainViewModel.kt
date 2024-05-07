@@ -27,7 +27,6 @@ class MainViewModel @Inject constructor(
 
         fetchCount?.let { item ->
             item.forEach {
-                println(it)
                 val price = it.count * it.price!!
                 totalPrice += price
             }

@@ -1,13 +1,19 @@
 package com.android.ecommerceapp.ui.favorites
 
+import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.android.ecommerceapp.databinding.FavoritesitemBinding
 import com.android.ecommerceapp.model.FavoritesEntity
+import com.android.ecommerceapp.ui.order.OrderAdapterDiffUtil
+import com.android.ecommerceapp.util.loadUrl
 
-class FavoritesAdapter(private val favoritesList: List<FavoritesEntity>):RecyclerView.Adapter<FavoritesAdapter.ViewHolder>() {
+class FavoritesAdapter(private val favoritesList: List<FavoritesEntity>)
+    :RecyclerView.Adapter<FavoritesAdapter.ViewHolder>() {
 
+     var onSwipeDeleteItem: ((FavoritesEntity) -> Unit)? = null
     inner class ViewHolder(val binding:FavoritesitemBinding):RecyclerView.ViewHolder(binding.root)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FavoritesAdapter.ViewHolder {
@@ -15,9 +21,28 @@ class FavoritesAdapter(private val favoritesList: List<FavoritesEntity>):Recycle
         return ViewHolder(binding)
     }
 
+    @SuppressLint("SetTextI18n")
     override fun onBindViewHolder(holder: FavoritesAdapter.ViewHolder, position: Int) {
         val favoritesItem =favoritesList[position]
-        holder.binding.itemId.text = favoritesItem.title
+        holder.binding.favoritesTitle.text = favoritesItem.title
+        holder.binding.favoritesPrice.text = "${favoritesItem.price} $"
+        holder.binding.favoritesImage.loadUrl(favoritesItem.image)
+
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
+    fun removeItem(position: Int) {
+        favoritesList.toMutableList().removeAt(position)
+
+//        onSwipeDeleteItem?.invoke(favoritesList[position])
+
+        notifyItemRemoved(position)
+    }
+    @SuppressLint("NotifyDataSetChanged")
+    fun updateList(newList: List<FavoritesEntity>){
+        val diffCallback = FavoritesAdapterDiffUtil(favoritesList, newList)
+        val diffResult = DiffUtil.calculateDiff(diffCallback)
+        diffResult.dispatchUpdatesTo(this)
     }
 
     override fun getItemCount(): Int {

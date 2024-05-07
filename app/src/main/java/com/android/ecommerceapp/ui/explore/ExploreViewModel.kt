@@ -4,23 +4,14 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.android.ecommerceapp.activity.Items
-import com.android.ecommerceapp.model.BaseException
 import com.android.ecommerceapp.model.ExploreProduct
-import com.android.ecommerceapp.model.Product
 import com.android.ecommerceapp.model.Result
-import com.android.ecommerceapp.model.SelectedItems
 import com.android.ecommerceapp.repository.CommerceRepository
 import com.android.ecommerceapp.sp.SharedPreferencesKey
 import com.android.ecommerceapp.sp.SharedPreferencesServices
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
-import retrofit2.Response
 import javax.inject.Inject
-import kotlin.coroutines.CoroutineContext
 
 @HiltViewModel
 class ExploreViewModel @Inject constructor(
@@ -55,8 +46,6 @@ class ExploreViewModel @Inject constructor(
                                 image = item.image,
                             )
                         }
-
-                        Items.exploreProductList = exploreProductList
                         _productsLiveData.value = Result.Success(exploreProductList)
                     }
                 }
