@@ -10,7 +10,7 @@ import com.android.ecommerceapp.model.FavoritesEntity
 import com.android.ecommerceapp.ui.order.OrderAdapterDiffUtil
 import com.android.ecommerceapp.util.loadUrl
 
-class FavoritesAdapter(private val favoritesList: List<FavoritesEntity>)
+class FavoritesAdapter(private val favoritesList: MutableList<FavoritesEntity>)
     :RecyclerView.Adapter<FavoritesAdapter.ViewHolder>() {
 
      var onSwipeDeleteItem: ((FavoritesEntity) -> Unit)? = null
@@ -31,15 +31,22 @@ class FavoritesAdapter(private val favoritesList: List<FavoritesEntity>)
     }
 
     @SuppressLint("NotifyDataSetChanged")
-    fun removeItem(position: Int) {
-        favoritesList.toMutableList().removeAt(position)
+    fun removeItem(position1: Int) {
 
-//        onSwipeDeleteItem?.invoke(favoritesList[position])
 
-        notifyItemRemoved(position)
+        if (position1 in favoritesList.indices) {
+            onSwipeDeleteItem?.invoke(favoritesList[position1])
+            favoritesList.removeAt(position1)
+            updateList(favoritesList)
+             notifyDataSetChanged()
+            println("adapter if durumu ")
+        }
+        else{
+            println("adapter else durumu ")
+        }
     }
     @SuppressLint("NotifyDataSetChanged")
-    fun updateList(newList: List<FavoritesEntity>){
+  private  fun updateList(newList: List<FavoritesEntity>){
         val diffCallback = FavoritesAdapterDiffUtil(favoritesList, newList)
         val diffResult = DiffUtil.calculateDiff(diffCallback)
         diffResult.dispatchUpdatesTo(this)

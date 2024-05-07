@@ -19,19 +19,16 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
-class DetailFragment() :
+class DetailFragment :
     BaseSecondaryFragment<FragmentDetailBinding, DetailViewModel, MainViewModel, MainActivity>(FragmentDetailBinding::inflate) {
-    override val viewModel: DetailViewModel by viewModels<DetailViewModel>()
-    override val viewModel2: MainViewModel by viewModels<MainViewModel>()
+    override val viewModel: DetailViewModel by viewModels()
+    override val viewModel2: MainViewModel by viewModels()
     private val args: DetailFragmentArgs by navArgs()
     private var isSelect = false
     private var product: Product? = null
     override fun onCreateFinished() {
 
-
-
         val job = viewModel.viewModelScope.launch {
-
             getItemDetail()
           viewModel.getItemIdList().collect{list->
 

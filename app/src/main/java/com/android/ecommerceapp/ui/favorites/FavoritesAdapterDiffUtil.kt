@@ -20,6 +20,23 @@ class FavoritesAdapterDiffUtil(
     }
 
     override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
-        return oldList[oldItemPosition].id == newList[newItemPosition].id
+            return when{
+
+            oldList[oldItemPosition].category != newList[newItemPosition].category ->{
+                false
+            }
+            oldList[oldItemPosition].description != newList[newItemPosition].description ->{
+                false
+            }
+            oldList[oldItemPosition].price != newList[newItemPosition].price ->{
+                false
+            }
+            oldList[oldItemPosition].title != newList[newItemPosition].title ->{
+                false
+            }
+            else ->{
+                true
+            }
+        }
     }
 }

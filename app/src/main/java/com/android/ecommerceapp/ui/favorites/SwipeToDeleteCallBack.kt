@@ -9,8 +9,9 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.android.ecommerceapp.R
+import javax.inject.Inject
 
-class SwipeToDeleteCallBack(
+class SwipeToDeleteCallBack @Inject constructor(
     private val adapter: RecyclerView.Adapter<*>,
     private val context: Context
 ) : ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
@@ -20,17 +21,21 @@ class SwipeToDeleteCallBack(
         viewHolder: RecyclerView.ViewHolder,
         target: RecyclerView.ViewHolder
     ): Boolean {
-        return false
+        return true
     }
 
     @SuppressLint("NotifyDataSetChanged")
     override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
         val position = viewHolder.adapterPosition
-        adapter as FavoritesAdapter
-        adapter.removeItem(position)
-    }
+        if (position != RecyclerView.NO_POSITION) {
+            adapter as FavoritesAdapter
+            adapter.removeItem(viewHolder.layoutPosition)
+            println("position ${viewHolder.layoutPosition}")
+        }
 
-    override fun onChildDraw(
+    }
+/*
+  override fun onChildDraw(
         c: Canvas,
         recyclerView: RecyclerView,
         viewHolder: RecyclerView.ViewHolder,
@@ -74,5 +79,7 @@ class SwipeToDeleteCallBack(
 
         super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive)
     }
+ */
+
 
 }

@@ -11,23 +11,35 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class FavoritesViewModel @Inject constructor(private val repository: CommerceRepository):ViewModel() {
+class FavoritesViewModel @Inject constructor(private val repository: CommerceRepository) :
+    ViewModel() {
 
-    private val _getUserFavoritesLiveData= MutableLiveData<Result<List<FavoritesEntity>>>(Result.Loading())
+    private val _getUserFavoritesLiveData =
+        MutableLiveData<Result<MutableList<FavoritesEntity>>>(Result.Loading())
     val getUserFavoritesLiveData = _getUserFavoritesLiveData
 
 
-     fun getUserFavorites(){
+    fun getUserFavorites() {
         viewModelScope.launch {
-            val result= repository.getFavoritesList()
+            val result = repository.getFavoritesList()
             result?.let {
-                _getUserFavoritesLiveData.value = Result.Success(it)
+                _getUserFavoritesLiveData.value = Result.Success(it.toMutableList())
             }
         }
     }
-    fun deleteItemFavorites(favoritesEntity: FavoritesEntity){
+
+    fun deleteItemFavorites(favoritesEntity: FavoritesEntity) {
         viewModelScope.launch {
             repository.deleteItemFavorites(favoritesEntity)
         }
+    }
+    fun deleteItemForId(id:Long){
+        viewModelScope.launch {
+            repository.deleteItemFavoritesListById(id)
+        }
+    }
+    override fun onCleared() {
+        super.onCleared()
+        println("onCleared() run ")
     }
 }

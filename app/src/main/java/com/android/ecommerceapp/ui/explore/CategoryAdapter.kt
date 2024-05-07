@@ -44,7 +44,6 @@ class CategoryAdapter(
         fetchItemCount?.forEach {
 
             if(categoryItem.id == it.id){
-                println(it)
                 categoryItem.count = it.count
             }
 
