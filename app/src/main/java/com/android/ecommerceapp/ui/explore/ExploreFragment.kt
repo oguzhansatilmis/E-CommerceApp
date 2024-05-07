@@ -52,7 +52,6 @@ class ExploreFragment :
                         setupAdapter(response, customerOrderItem)
                     }
                 }
-
                 is Result.Loading -> {
                     activity().showProgress()
                 }

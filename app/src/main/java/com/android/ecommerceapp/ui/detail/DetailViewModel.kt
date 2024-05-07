@@ -9,6 +9,8 @@ import com.android.ecommerceapp.model.Rating
 import com.android.ecommerceapp.model.Result
 import com.android.ecommerceapp.repository.CommerceRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.launch
 import retrofit2.Response
 import javax.inject.Inject
@@ -36,6 +38,7 @@ class DetailViewModel @Inject constructor(
             }
         }
     }
+
     fun insertFavoriteItem(product: Product) {
 
         viewModelScope.launch {
@@ -51,7 +54,8 @@ class DetailViewModel @Inject constructor(
             repository.insetFavoriteItem(favoritesEntity)
         }
     }
-    fun deleteFavoriteItem(product: Product){
+
+    fun deleteFavoriteItem(product: Product) {
         viewModelScope.launch {
             val favoritesEntity = FavoritesEntity(
                 id = product.id,
@@ -66,4 +70,11 @@ class DetailViewModel @Inject constructor(
         }
     }
 
+    fun getItemIdList(): Flow<List<Long>> = flow {
+        val idList = repository.getFavoritesIdList()
+        idList?.let {
+            emit(it)
+        }
+    }
 }
+

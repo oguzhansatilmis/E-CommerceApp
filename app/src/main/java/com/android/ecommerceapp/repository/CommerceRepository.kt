@@ -33,4 +33,8 @@ class CommerceRepository @Inject constructor(
         dao.deleteItemFavoritesList(favoritesEntity)
     }
 
+    suspend fun getFavoritesIdList() = safeApiCall {
+        dao.getFavoritesItemId()
+    }
+
 }

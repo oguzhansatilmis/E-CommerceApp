@@ -93,5 +93,8 @@ dependencies {
     kapt ("androidx.room:room-compiler:2.5.0")
     implementation ("androidx.room:room-testing:2.5.1")
 
+    //shimmer
+    implementation ("com.facebook.shimmer:shimmer:0.5.0")
+
 
 }

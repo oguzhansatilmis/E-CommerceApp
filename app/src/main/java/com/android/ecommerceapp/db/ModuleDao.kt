@@ -14,6 +14,10 @@ interface ModuleDao {
     @Query("SELECT * FROM favorites_table")
     fun getFavoritesList(): List<FavoritesEntity>
 
+
+    @Query("SELECT id FROM favorites_table")
+    fun getFavoritesItemId(): List<Long>
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertModule(favoritesEntity: FavoritesEntity)
 

@@ -3,6 +3,7 @@ package com.android.ecommerceapp.ui.detail
 import android.annotation.SuppressLint
 import android.widget.Toast
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.viewModelScope
 import androidx.navigation.fragment.navArgs
 import com.android.ecommerceapp.R
 import com.android.ecommerceapp.activity.MainActivity
@@ -12,34 +13,57 @@ import com.android.ecommerceapp.databinding.FragmentDetailBinding
 import com.android.ecommerceapp.model.Product
 import com.android.ecommerceapp.model.Result
 import com.android.ecommerceapp.model.enums.MessageType
-import com.android.ecommerceapp.ui.explore.ExploreFragment
-import com.android.ecommerceapp.ui.explore.ExploreViewModel
+import com.android.ecommerceapp.util.clickWithDebounce
 import com.android.ecommerceapp.util.loadUrl
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class DetailFragment() :
-    BaseSecondaryFragment<FragmentDetailBinding, DetailViewModel, MainViewModel, MainActivity>(
-        FragmentDetailBinding::inflate
-    ) {
+    BaseSecondaryFragment<FragmentDetailBinding, DetailViewModel, MainViewModel, MainActivity>(FragmentDetailBinding::inflate) {
     override val viewModel: DetailViewModel by viewModels<DetailViewModel>()
     override val viewModel2: MainViewModel by viewModels<MainViewModel>()
     private val args: DetailFragmentArgs by navArgs()
     private var isSelect = false
     private var product: Product? = null
-    override fun onCreateFinished() { getItemDetail() }
+    override fun onCreateFinished() {
+
+
+
+        val job = viewModel.viewModelScope.launch {
+
+            getItemDetail()
+          viewModel.getItemIdList().collect{list->
+
+              args.itemId?.let {itemId->
+
+                  list.forEach {
+                      isSelect = itemId ==it.toString()
+                      return@forEach
+                  }
+              }
+            }
+        }
+        job.invokeOnCompletion {
+            if (isSelect) {
+                binding.selectFavorites.setBackgroundResource(R.drawable.select)
+            } else {
+                binding.selectFavorites.setBackgroundResource(R.drawable.unselect)
+            }
+        }
+    }
     override fun initializeListeners() {}
 
     override fun observeEvents() {
 
-        binding.selectFavorites.setOnClickListener {
+        binding.selectFavorites.clickWithDebounce {
 
             if (isSelect) {
-                isSelect = !isSelect
+                isSelect = false
                 binding.selectFavorites.setBackgroundResource(R.drawable.unselect)
                 deleteFavorite()
             } else {
-                isSelect = !isSelect
+                isSelect = true
                 binding.selectFavorites.setBackgroundResource(R.drawable.select)
                 addFavorite()
             }
@@ -71,7 +95,6 @@ class DetailFragment() :
                 is Result.Loading -> {
                     activity().showProgress()
                 }
-
                 is Result.Error -> {
                     activity().hideProgress()
                     activity().showMessage(it.message, MessageType.ERROR)

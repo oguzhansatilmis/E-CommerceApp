@@ -1,5 +1,6 @@
 package com.android.ecommerceapp.util
 
+import android.os.SystemClock
 import android.view.View
 import android.widget.ImageView
 import com.bumptech.glide.Glide
@@ -25,4 +26,15 @@ fun Double.toFormat():String{
     val formattedPrice = formatter.format(this)
 
     return formattedPrice.toDouble().toString()
+}
+
+fun View.clickWithDebounce(debounceTime: Long = Constants.debounceTime, action: (View) -> Unit) {
+    this.setOnClickListener(object : View.OnClickListener {
+        private var lastClickTime: Long = 0
+        override fun onClick(v: View) {
+            if (SystemClock.elapsedRealtime() - lastClickTime < debounceTime) return
+            else action(v)
+            lastClickTime = SystemClock.elapsedRealtime()
+        }
+    })
 }
