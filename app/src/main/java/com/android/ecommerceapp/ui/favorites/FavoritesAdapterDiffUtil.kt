@@ -2,10 +2,11 @@ package com.android.ecommerceapp.ui.favorites
 
 import androidx.recyclerview.widget.DiffUtil
 import com.android.ecommerceapp.model.FavoritesEntity
+import com.android.ecommerceapp.model.Product
 
 class FavoritesAdapterDiffUtil(
-    private val oldList:List<FavoritesEntity>,
-    private val newList:List<FavoritesEntity>,
+    private val oldList:List<Product>,
+    private val newList:List<Product>,
 ):DiffUtil.Callback() {
     override fun getOldListSize(): Int {
      return oldList.size
