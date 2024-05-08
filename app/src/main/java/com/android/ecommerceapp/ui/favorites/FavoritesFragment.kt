@@ -31,6 +31,8 @@ class FavoritesFragment : BaseSecondaryFragment<FragmentFavoritesBinding, Favori
     override val viewModel2: DetailViewModel by viewModels()
 
     override fun onCreateFinished() {
+
+        activity().activityBinding.toolbarTv.text = "Favorilerim"
         viewModel.getUserFavorites()
     }
 

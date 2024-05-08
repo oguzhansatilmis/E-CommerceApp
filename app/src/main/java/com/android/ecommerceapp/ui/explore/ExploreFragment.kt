@@ -24,9 +24,7 @@ class ExploreFragment :
 
     override fun onCreateFinished() {
 
-        binding.scroolView.customSetVisibility(false)
-        binding.shimmerLayout.customSetVisibility(true)
-        binding.shimmerLayout.startShimmer()
+        activity().activityBinding.toolbarTv.text = "Keşfet"
         binding.recyclerview.addItemDecoration(ItemDecoration())
         viewModel.getCategoryItems()
     }
@@ -35,7 +33,6 @@ class ExploreFragment :
         viewModel2.calculateOrderPrice()
         activity().activityBinding.basketPriceText.text = viewModel2.getTotalAccount()
     }
-
     override fun observeEvents() {
         observeProductLiveData()
     }
@@ -46,9 +43,6 @@ class ExploreFragment :
             when (it) {
                 is Result.Success -> {
                     activity().hideProgress()
-                    binding.shimmerLayout.stopShimmer()
-                    binding.scroolView.customSetVisibility(true)
-                    binding.shimmerLayout.customSetVisibility(false)
                     it.data?.let { response ->
                         setupAdapter(response, customerOrderItem)
                     }

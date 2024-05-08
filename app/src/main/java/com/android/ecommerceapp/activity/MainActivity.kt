@@ -52,14 +52,9 @@ class MainActivity : AppCompatActivity() {
             }
         }
     }
-
     val activityBinding:ActivityMainBinding
         get() = binding
 
-    fun setBasketPrice(price:Double){
-
-        binding.basketPriceText.text = price.toFormat()
-    }
 
     fun showProgress() {
         isShowingDialog = true

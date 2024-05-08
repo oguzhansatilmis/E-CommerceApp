@@ -29,6 +29,8 @@ class OrderFragment :
     lateinit var sharedPreferencesServices: SharedPreferencesServices
      private var nonZeroCountItems :MutableList <ExploreProduct>? = null
     override fun onCreateFinished() {
+
+        activity().activityBinding.toolbarTv.text = "Sipariş"
         binding.orderRecyclerview.addItemDecoration(ItemDecoration())
     }
 
