@@ -30,11 +30,15 @@ class DetailFragment :
 
         val job = viewModel.viewModelScope.launch {
             getItemDetail()
-            viewModel.getFavoritesItem().collect{ list->
-                args.itemId?.let {itemId->
-                    val isMatched = list.any { it.id.toString() == itemId }
-                    isSelect = isMatched
-                }
+          viewModel.getItemIdList().collect{list->
+
+              args.itemId?.let {itemId->
+
+                  list.forEach {
+                      isSelect = itemId ==it.toString()
+                      return@forEach
+                  }
+              }
             }
         }
         job.invokeOnCompletion {
@@ -98,14 +102,16 @@ class DetailFragment :
     private fun addFavorite() {
 
         product?.let {
-
-            viewModel.favoritesItemAdd(it) }
+            viewModel.insertFavoriteItem(it)
+        }
+        Toast.makeText(requireContext(), "Kaydedildi", Toast.LENGTH_LONG).show()
     }
 
     private fun deleteFavorite() {
 
         product?.let {
-            viewModel.favoritesItemDelete(it)
+            viewModel.deleteFavoriteItem(it)
+            Toast.makeText(requireContext(), "Silindi", Toast.LENGTH_LONG).show()
         }
     }
 }

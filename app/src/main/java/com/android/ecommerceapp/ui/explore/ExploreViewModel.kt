@@ -27,6 +27,8 @@ class ExploreViewModel @Inject constructor(
     @Inject
     lateinit var sharedPreferencesServices: SharedPreferencesServices
 
+
+
     fun getCategoryItems() {
         viewModelScope.launch {
             val productItems = repository.getAllProduct()
@@ -54,7 +56,8 @@ class ExploreViewModel @Inject constructor(
     }
 
     fun fetchCount(): ArrayList<ExploreProduct>? {
-        fetchCount = sharedPreferencesServices.fetch<ArrayList<ExploreProduct>>(SharedPreferencesKey.PRODUCT)
+        fetchCount =
+            sharedPreferencesServices.fetch<ArrayList<ExploreProduct>>(SharedPreferencesKey.PRODUCT)
         return fetchCount
     }
 

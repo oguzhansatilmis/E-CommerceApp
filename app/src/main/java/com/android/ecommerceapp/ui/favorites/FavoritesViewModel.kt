@@ -4,11 +4,8 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.android.ecommerceapp.model.FavoritesEntity
-import com.android.ecommerceapp.model.Product
 import com.android.ecommerceapp.model.Result
 import com.android.ecommerceapp.repository.CommerceRepository
-import com.android.ecommerceapp.sp.SharedPreferencesKey
-import com.android.ecommerceapp.sp.SharedPreferencesServices
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -18,21 +15,29 @@ class FavoritesViewModel @Inject constructor(private val repository: CommerceRep
     ViewModel() {
 
     private val _getUserFavoritesLiveData =
-        MutableLiveData<Result<MutableList<Product>>>(Result.Loading())
+        MutableLiveData<Result<MutableList<FavoritesEntity>>>(Result.Loading())
     val getUserFavoritesLiveData = _getUserFavoritesLiveData
 
-    @Inject
-        lateinit var sharedPreferencesServices: SharedPreferencesServices
 
     fun getUserFavorites() {
         viewModelScope.launch {
-            val result = sharedPreferencesServices.fetch<MutableList<Product>>(SharedPreferencesKey.FAVORITES)
+            val result = repository.getFavoritesList()
             result?.let {
                 _getUserFavoritesLiveData.value = Result.Success(it.toMutableList())
             }
         }
     }
 
+    fun deleteItemFavorites(favoritesEntity: FavoritesEntity) {
+        viewModelScope.launch {
+            repository.deleteItemFavorites(favoritesEntity)
+        }
+    }
+    fun deleteItemForId(id:Long){
+        viewModelScope.launch {
+            repository.deleteItemFavoritesListById(id)
+        }
+    }
     override fun onCleared() {
         super.onCleared()
         println("onCleared() run ")
